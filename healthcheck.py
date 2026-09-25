@@ -8,7 +8,7 @@ def check_endpoint(url:str) -> dict:
 
     request = Request(
         url,
-        headers={"User-Agent":"service-health-monitor/0,1"},
+        headers={"User-Agent":"service-health-monitor/0.1"},
     )
 
     try:
@@ -33,7 +33,7 @@ def check_endpoint(url:str) -> dict:
         "url":url,
         "healthy":healthy,
         "status_code": status_code,
-        "response_time_ms": round(elapsed_ms,1),
+        "response_time_ms": round(elapsed_ms,2),
         "error": error,
     }
 
