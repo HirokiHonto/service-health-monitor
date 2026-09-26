@@ -2,6 +2,7 @@ import json
 import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request,urlopen
+import os
 
 def check_endpoint(url:str) -> dict:
     start = time.perf_counter()
@@ -38,5 +39,6 @@ def check_endpoint(url:str) -> dict:
     }
 
 if __name__ == "__main__":
-    result = check_endpoint("https://example.com")
+    url = os.environ.get("TARGET_URL","https://example.com")
+    result = check_endpoint(url)
     print(json.dumps(result, indent=2))
