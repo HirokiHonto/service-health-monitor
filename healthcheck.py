@@ -38,5 +38,5 @@ def check_endpoint(url:str) -> dict:
     }
 
 if __name__ == "__main__":
-    result = check_endpoint("http://127.0.0.1:8000/missing-page")
+    result = check_endpoint("https://example.com")
     print(json.dumps(result, indent=2))
