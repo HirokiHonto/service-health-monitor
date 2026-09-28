@@ -3,6 +3,7 @@ import time
 from urllib.error import HTTPError, URLError
 from urllib.request import Request,urlopen
 import os
+import sys
 
 def check_endpoint(url:str) -> dict:
     start = time.perf_counter()
@@ -42,3 +43,4 @@ if __name__ == "__main__":
     url = os.environ.get("TARGET_URL","https://example.com")
     result = check_endpoint(url)
     print(json.dumps(result, indent=2))
+    sys.exit(0 if result["healthy"] else 1)
