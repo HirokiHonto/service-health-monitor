@@ -25,3 +25,34 @@ jobs:
 
     - name: Run tests
       run: python -m pytest -v
+
+    - name: Build Docker image
+      run: docker build -t service-health-monitor:ci .
+
+    - name: Test container against a local server
+      shell: bash
+      run: |
+        mkdir -p /tmp/healthcheck-site
+        echo "OK" > /tmp/healthcheck-site/index.html
+
+        python -m http.server 8765 \
+          --bind 127.0.0.1 \
+          --directory /tmp/healthcheck-site \
+          > /tmp/healthcheck-server.log 2>&1 &
+
+        curl -f --retry 5 --retry-connrefused --retry-delay 1 http://127.0.0.1:8765
+
+        docker run --rm -e TARGET_URL=http://127.0.0.1:8765/ \
+        --network host service-health-monitor:ci
+
+        actual_code=0
+
+        docker run --rm -e TARGET_URL=http://127.0.0.1:8765/missing-page \
+        --network host service-health-monitor:ci > /tmp/missing-page-result.json || actual_code=$?
+
+
+        test "$actual_code" -eq 1
+
+        python -c 'import json,sys; result = json.load(open("/tmp/missing-page-result.json")); \
+        sys.exit(0 if result["status_code"]== 404 else 1)'
+
