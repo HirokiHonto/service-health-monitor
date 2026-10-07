@@ -1,0 +1,9 @@
+[Unit]
+Description=Run one service health check
+Requires=docker.service
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/docker run --rm -e TARGET_URL=https://example.com service-health-monitor:local
