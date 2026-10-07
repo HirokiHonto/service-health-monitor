@@ -6,4 +6,5 @@ Wants=network-online.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/docker run --rm -e TARGET_URL=https://example.com service-health-monitor:local
+ExecStart=/usr/bin/docker run --rm -e TARGET_URL service-health-monitor:local
+EnvironmentFile=/etc/service-health-monitor.env
